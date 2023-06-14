@@ -1,0 +1,22 @@
+[
+	{
+		"name": "John Smith",
+		"age": 35,
+		"email": "johnsmith@gmail.com",
+		"phone": "0413-535-124" 
+	}, 
+	{ 
+		"name": "Jane Doe", 
+		"age": 28, 
+		"email": "janedoe@yahoo.com", 
+		"phone": "0401-655-5A8"
+	}, 
+	{ 
+		"name": "Bob Johnson", 
+		"age": 42, 
+		"email": "bjohnson@hotmail.com", 
+		"phone": "0433-515-912" 
+	}
+]
+
+
