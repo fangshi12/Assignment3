@@ -67,41 +67,20 @@ def add_initials_to_customers(customers):
 customer_data_list_with_initials = add_initials_to_customers(persons_list)
 
 
-# Remove the'-' in phone numbers
-# def remove_hyphen_in_phone_number(customers):
-#     try:
-#         for customer in customers:
-#             phone_numbers = customer['phone']
-#             plain_phone_numbers = phone_numbers.replace('-','')
-#             plain_phone_numbers = int(plain_phone_numbers)
-#             customer['phone'] = plain_phone_numbers
-#         return customers
-#     except ValueError as e:
-#         print('Error: Invalid phone number format')
-#         return None
-
-# def convert_phone_string_to_number(customers):
-#     for customer in customers:
-#         original_phone_number = customer['phone']
-#         plain_phone_numbers = original_phone_number.replace('-','')
-#         try:
-#             plain_phone_numbers = int(plain_phone_numbers)
-#             customer['phone'] = plain_phone_numbers
-#         except ValueError as e:
-#             print(f'Error: Invalid phone number: {original_phone_number}')
-#             customer['phone'] = original_phone_number
-#     return customers
-
-
-# modified_data_list_with_plain_phone_numbers = convert_phone_string_to_number(customer_data_list_with_initials)
-# if modified_data_list_with_plain_phone_numbers is not None:
-#     print(modified_data_list_with_plain_phone_numbers)
-
+# Remove the '-' symbol in phone numbers and convert phone string to phone number
+def convert_phone_string_to_phone_number(customers):
+    for customer in customers:
+        try:
+            phone_number_string = customer.phone
+            phone_number_string_without_hyphen = phone_number_string.replace('-', '')
+            phone_number = int(phone_number_string_without_hyphen)
+            customer.phone = phone_number
+        except ValueError:
+            customer.phone = f'Invalid phone number: {customer.phone}'
+    return customers
 
 
 # Store the modified information into a new csv file
-
-
 
 for person in customer_data_list_with_initials:
     modified_information = (f"name : {person.name}, "
