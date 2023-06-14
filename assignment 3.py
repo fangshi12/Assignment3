@@ -6,25 +6,15 @@
 
 # Add initials, convert phone number into integer only
 
+import csv
+import json
+from person import Person
+
 # Read the json file to get customer data:
 with open('Assessment 3.json','r') as file:
     customer_data = file.read()
-print(customer_data)
-
-# Convert the customer data into a list
-# Load the JSON data into a list of dictionaries
-import json
 customer_data_list = json.loads(customer_data)
-
-# Print out all customer data
 print(customer_data_list)
-
-class Person:
-    def __init__(self, name, age, email, phone):
-        self.name = name
-        self.age = age
-        self.email = email
-        self.phone = phone
 
 
 # Create an empty list to store Person objects
@@ -50,43 +40,32 @@ for person in persons_list:
 def get_person_details():
     name = input("Enter the person's name: ")
     age = int(input("Enter the person's age: "))
+
     email = input("Enter the person's email: ")
     phone = input("Enter the person's phone number: ")
-
     return Person(name, age, email, phone)
 
 
-# Ask user if there is more people to add
 more_people = True
 while more_people:
-    person = get_person_details()
-    persons_list.append(person)
-
     choice = input("Do you want to add more people? Enter 1 to add more / Enter any others to pass")
-    if choice.lower() != "1":
+    if choice == "1":
+        person = get_person_details()
+        persons_list.append(person)
+    else:
         more_people = False
-
-# All the customer names:
-customer_name = []
-for customer_info in customer_data_list:
-    name_list = customer_info['name']
-    customer_name.append(name_list)
-
-print(customer_name)
-
 
 # Add initial to customer data:
 def add_initials_to_customers(customers):
-    for customer_info in customers:
-        name = customer_info['name']
+    for customer_object in customers:
+        name = customer_object.name
         name_split = name.split()
         initials = name_split[0][0] + name_split[-1][0]
-        customer_info['initials'] = initials
+        customer_object.initials = initials
     return customers
 
-customer_data_list_with_initials = add_initials_to_customers(customer_data_list)
-# Print the new alist after initials have been added:
-print(customer_data_list_with_initials)
+customer_data_list_with_initials = add_initials_to_customers(persons_list)
+
 
 # Remove the'-' in phone numbers
 # def remove_hyphen_in_phone_number(customers):
@@ -101,32 +80,42 @@ print(customer_data_list_with_initials)
 #         print('Error: Invalid phone number format')
 #         return None
 
-def convert_phone_string_to_number(customers):
-    for customer in customers:
-        original_phone_number = customer['phone']
-        plain_phone_numbers = original_phone_number.replace('-','')
-        try:
-            plain_phone_numbers = int(plain_phone_numbers)
-            customer['phone'] = plain_phone_numbers
-        except ValueError as e:
-            print(f'Error: Invalid phone number: {original_phone_number}')
-            customer['phone'] = original_phone_number
-    return customers
+# def convert_phone_string_to_number(customers):
+#     for customer in customers:
+#         original_phone_number = customer['phone']
+#         plain_phone_numbers = original_phone_number.replace('-','')
+#         try:
+#             plain_phone_numbers = int(plain_phone_numbers)
+#             customer['phone'] = plain_phone_numbers
+#         except ValueError as e:
+#             print(f'Error: Invalid phone number: {original_phone_number}')
+#             customer['phone'] = original_phone_number
+#     return customers
 
 
-modified_data_list_with_plain_phone_numbers = convert_phone_string_to_number(customer_data_list_with_initials)
-if modified_data_list_with_plain_phone_numbers is not None:
-    print(modified_data_list_with_plain_phone_numbers)
+# modified_data_list_with_plain_phone_numbers = convert_phone_string_to_number(customer_data_list_with_initials)
+# if modified_data_list_with_plain_phone_numbers is not None:
+#     print(modified_data_list_with_plain_phone_numbers)
 
 
-# I will store the modified information into a new csv file
-import csv
 
-field_names = ['name', 'age', 'email', 'phone', 'initials']
+# Store the modified information into a new csv file
 
-with open('modified_data_Fang_Shi.csv','w',newline='') as file:
-    writer = csv.DictWriter(file,fieldnames=field_names)
-    writer.writeheader()
-    writer.writerows(modified_data_list_with_plain_phone_numbers)
+
+
+for person in customer_data_list_with_initials:
+    modified_information = (f"name : {person.name}, "
+                           f"age : {person.age}, "
+                           f"email : {person.email}, "
+                           f"phone : {person.phone}, "
+                           f"initials : {person.initials}")
+
+# Write objects to the CSV file, which is called 'modified_data_Fang_Shi.csv'
+with open('modified_data_Fang_Shi.csv', 'w', newline='') as csvFile:
+    writer = csv.writer(csvFile)
+    writer.writerow(['name', 'age', 'email', 'phone', 'initials'])
+
+    for person in customer_data_list_with_initials:
+        writer.writerow([person.name, person.age, person.email, person.phone, person.initials])
 
 print('New CSV file created successfully. It contains modified information.')
